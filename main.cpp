@@ -82,7 +82,31 @@ public:
     
     int registerPatient(string name, int age, string contact);
     int addDoctor(string name, Department dept);
-    void admitPatient(int patientId, RoomType type);
+    void admitPatient(int patientId, RoomType type){
+        for(auto p : patients){
+            if(p.getAdmissionStatus() && p.getId()==patientId){
+                cout << "Patients is already admitted into a room" << endl;
+            }else{
+                switch (type)
+                {
+                case RoomType::GENERAL_WARD:
+                    cout << "Patient has been admitted into a General ward room." << endl;
+                    break;
+                case RoomType::ICU:
+                    cout << "Patient has been admitted into a Intensive Care Unit room." << endl;
+                    break;
+                case RoomType::PRIVATE_ROOM:
+                    cout << "Patient has been admitted into a private room." << endl;
+                    break;
+                case RoomType::SEMI_PRIVATE:
+                    cout << "Patient has been admitted into a semi-private room." << endl;
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+    };
     void addEmergency(int patientId);
     int handleEmergency();
     void bookAppointment(int doctorId, int patientId);
