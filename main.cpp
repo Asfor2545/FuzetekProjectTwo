@@ -46,6 +46,12 @@ public:
     
     int getId();
     string getName();
+    int getAge(){
+        return this->age;
+    } // Added for functions like displayPatientInfo()
+    RoomType getRoomType(){
+        return this->roomType;
+    }
     bool getAdmissionStatus();
 };
 
@@ -82,11 +88,77 @@ public:
     
     int registerPatient(string name, int age, string contact);
     int addDoctor(string name, Department dept);
-    void admitPatient(int patientId, RoomType type);
+    void admitPatient(int patientId, RoomType type){
+        for(auto &p : patients){
+            if(p.getAdmissionStatus() && p.getId()==patientId){
+                cout << "Patients is already admitted into a room" << endl;
+                return;
+            }else{
+                p.admitPatient(type);
+                switch (type)
+                {
+                case RoomType::GENERAL_WARD:
+                    cout << "Patient has been admitted into a General ward room." << endl;
+                    break;
+                case RoomType::ICU:
+                    cout << "Patient has been admitted into a Intensive Care Unit room." << endl;
+                    break;
+                case RoomType::PRIVATE_ROOM:
+                    cout << "Patient has been admitted into a private room." << endl;
+                    break;
+                case RoomType::SEMI_PRIVATE:
+                    cout << "Patient has been admitted into a semi-private room." << endl;
+                    break;
+                }
+                return;
+            }
+        }
+        cout << "Patient not found.\n";
+    }
     void addEmergency(int patientId);
     int handleEmergency();
-    void bookAppointment(int doctorId, int patientId);
-    void displayPatientInfo(int patientId);
+    void bookAppointment(int doctorId, int patientId){
+        bool found=false;
+        int doctorIndex=-1;
+        for(auto &d : doctors){
+            doctorIndex++;
+            if(d.getId()==doctorId){
+                found=true;
+                break;
+            }
+        }
+        if(!found){
+            cout << "Doctor not found.\n";
+            return;
+        }
+        found=false;
+        for(auto &p : patients){
+            if(p.getId()==patientId){
+                found=true;
+                break;
+            }
+        }
+        if(!found){
+            cout << "Patient not found.\n";
+            return;
+        }
+        doctors[doctorIndex].addAppointment(patientId);
+        cout << "Appointment has been booked with Dr." << doctors[doctorIndex].getName() << endl;
+    }
+    void displayPatientInfo(int patientId){
+        for(auto &p : patients){
+            if(p.getId()==patientId){
+                cout << "=== Patient Information ===" << endl;
+                cout << "ID: " << patientId << endl; 
+                cout << "Name: " << p.getName() << endl;
+                cout << "Age: " << p.getAge() << endl;
+                cout << "Admission Status: " << (p.getAdmissionStatus()) ? "Admitted" : "Not Admitted";
+                if(p.getAdmissionStatus()){
+                    cout << "Room Type: " << p.getRoomType() << endl;
+                }
+            }
+        }
+    }
     void displayDoctorInfo(int doctorId);
 };
 
