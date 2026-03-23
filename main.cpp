@@ -22,6 +22,18 @@ enum RoomType {
     SEMI_PRIVATE
 };
 
+string getDeptName(Department d){
+    switch(d){
+        case CARDIOLOGY: return "Cardiology";
+        case NEUROLOGY: return "Neurology";
+        case ORTHOPEDICS: return "Orthopedics";
+        case PEDIATRICS: return "Pediatrics";
+        case EMERGENCY: return "Emergency";
+        case GENERAL: return "General";
+    }
+    return "";
+}
+
 // ========== PATIENT CLASS ========== //
 class Patient {
 private:
@@ -84,10 +96,24 @@ private:
     int doctorCounter;
     
 public:
-    Hospital();
+    Hospital(){
+        patientCounter = 1;
+        doctorCounter = 1;
+    };
     
-    int registerPatient(string name, int age, string contact);
-    int addDoctor(string name, Department dept);
+    int registerPatient(string name, int age, string contact){
+        Patient p(patientCounter, name , age , contact);
+        patients.push_back(p);
+        cout << "Patient registered: " << name << " (ID: " << patientCounter << ")" << endl;     
+        
+        return patientCounter++;
+    }
+    int addDoctor(string name, Department dept){
+        Doctor d(doctorCounter,name,dept);
+        doctors.push_back(d);
+        cout << "Doctor added: " << name << " (ID: " << doctorCounter << ") - " << getDeptName(dept) << endl;
+        return doctorCounter++;
+    }
     void admitPatient(int patientId, RoomType type){
         for(auto &p : patients){
             if(p.getAdmissionStatus() && p.getId()==patientId){
