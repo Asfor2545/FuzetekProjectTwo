@@ -121,6 +121,7 @@ public:
                 return;
             }else{
                 p.admitPatient(type);
+                patientCounter++;
                 switch (type)
                 {
                 case RoomType::GENERAL_WARD:
