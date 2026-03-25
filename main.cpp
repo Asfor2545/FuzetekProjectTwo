@@ -47,24 +47,85 @@ private:
     RoomType roomType;
     
 public:
-    Patient(int pid, string n, int a, string c);
+    Patient(int pid, string n, int a, string c) {
+        id = pid;
+        name = n;
+        age = a;
+        contact = c;
+        isAdmitted = false;
+    }
+   
+
+    void admitPatient(RoomType type) {
+        if (isAdmitted) {
+            cout << "Patient already admitted.\n";
+            return;
+        }
+        isAdmitted = true;
+        roomType = type;
+        cout << "Patient " << name << " admitted.\n";
+    }
+
+    void dischargePatient() {
+        if (!isAdmitted) {
+            cout << "Patient not admitted.\n";
+            return;
+        }
+        isAdmitted = false;
+        cout << "Patient " << name << " discharged.\n";
+    }
+
+    void addMedicalRecord(string record) {
+        medicalHistory.push(record);
+    }
+    void requestTest(string test) {
+        testQueue.push(test);
+    }
+
+    string performTest()
+    {
+        if (testQueue.empty()) {
+            return "No tests pending.";
+        }
+
+        string test = testQueue.front();
+        testQueue.pop();
+        return "Performing test: " + test;
+    };
+
+    void displayHistory() {
+        if (medicalHistory.empty()) {
+            cout << "No history.\n";
+            return;
+        }
+
+        stack<string> temp = medicalHistory;
+        cout << "History (Newest → Oldest):\n";
+        while (!temp.empty()) {
+            cout << "- " << temp.top() << endl;
+            temp.pop();
+        }
+    }
+
     
-    void admitPatient(RoomType type);
-    void dischargePatient();
-    void addMedicalRecord(string record);
-    void requestTest(string testName);
-    string performTest();
-    void displayHistory();
-    
-    int getId();
-    string getName();
+    int getId() {
+        return id;
+
+    }
+
+    string getName() {
+        return name;
+    }
+
+    bool getAdmissionStatus() {
+        return isAdmitted;
+    }
     int getAge(){
         return this->age;
     } // Added for functions like displayPatientInfo()
     RoomType getRoomType(){
         return this->roomType;
     }
-    bool getAdmissionStatus();
 };
 
 // ========== DOCTOR CLASS ========== //
@@ -121,7 +182,6 @@ public:
                 return;
             }else{
                 p.admitPatient(type);
-                patientCounter++;
                 switch (type)
                 {
                 case RoomType::GENERAL_WARD:
