@@ -158,8 +158,8 @@ private:
     
 public:
     Hospital(){
-        patientCounter = 1;
-        doctorCounter = 1;
+        patientCounter = 0;
+        doctorCounter = 0;
     };
     
     int registerPatient(string name, int age, string contact){
